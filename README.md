@@ -1,3 +1,5 @@
+# nodejs-shop
+
 ## Overview
 
 This is a small demo e-commerce app built with **Express** (server + routing), **EJS** (views), and **Sequelize** (MySQL persistence).
@@ -12,13 +14,13 @@ It supports:
 ## Requirements
 
 - Node.js
-- A running **MySQL** server
+- A running **MySQL** (or MySQL-compatible, e.g. MariaDB) server
 
 ## Setup
 
 1. Install dependencies:
 
-   ```bash
+   ```
    npm install
    ```
 
@@ -33,18 +35,43 @@ It supports:
 3. Configure MySQL credentials
 
    Edit `util/database.js`:
-
    - database name
    - username/password
    - host (currently `127.0.0.1`)
 
 4. Start the server:
 
-   ```bash
+   ```
    npm start
    ```
 
-The server calls `sequelize.sync()` and ensures user/cart initialization (it creates `User` id `1` if missing, then creates a cart).
+   The server calls `sequelize.sync()` and ensures user/cart initialization (it creates `User` id `1` if missing, then creates a cart).
+
+## MySQL / MariaDB Setup Notes
+
+### Starting MySQL (WSL / Ubuntu)
+
+If you're running this on **WSL** (Windows Subsystem for Linux), MySQL does not start automatically — there's no systemd by default, so you need to start it manually each session:
+
+```bash
+sudo service mysql start
+sudo service mysql status
+```
+
+### Connecting to check the database
+
+```bash
+mysql -u root -p
+```
+
+```sql
+USE node;
+SHOW TABLES;
+SELECT * FROM Users;
+SELECT * FROM Carts;
+```
+
+You should see tables matching the Sequelize models (`Users`, `Carts`, `Products`, `CartItems`, `Orders`, `OrderItems`), and one seeded `User`/`Cart` row (id `1`) after the app's first successful run.
 
 ## Main Routes
 
@@ -80,4 +107,3 @@ The app serves static files from `public/`:
 
 - CSS: `public/css/*` (including `main.css`, `product.css`, `forms.css`)
 - JS: `public/js/main.js`
-
